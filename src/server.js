@@ -51,6 +51,8 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 4000;
 const MONGODB_URI = process.env.MONGODB_URI;
+const SELF_PING_INTERVAL_MS = Number(process.env.SELF_PING_INTERVAL_MS || 300000);
+const SELF_PING_ENABLED = process.env.SELF_PING_ENABLED !== "false";
 
 if (!MONGODB_URI) {
   console.error("Xatolik: .env ichida MONGODB_URI topilmadi.");
@@ -83,12 +85,34 @@ app.get("/locations", async (_req, res) => {
   }
 });
 
+app.get("/health", (_req, res) => {
+  res.status(200).json({ ok: true, uptime: process.uptime() });
+});
+
+function startSelfPing() {
+  if (!SELF_PING_ENABLED) return;
+
+  const baseUrl =
+    process.env.RENDER_EXTERNAL_URL || `http://127.0.0.1:${PORT}`;
+  const pingUrl = `${baseUrl}/health`;
+
+  setInterval(async () => {
+    try {
+      await fetch(pingUrl);
+      console.log(`[self-ping] ok: ${pingUrl}`);
+    } catch (error) {
+      console.error(`[self-ping] failed: ${error.message}`);
+    }
+  }, SELF_PING_INTERVAL_MS);
+}
+
 async function start() {
   try {
     await mongoose.connect(MONGODB_URI);
     app.listen(PORT, () => {
       console.log(`Server running on http://localhost:${PORT}`);
       console.log("MongoDB ulandi.");
+      startSelfPing();
     });
   } catch (error) {
     console.error("MongoDB ulanishida xatolik:", error.message);
