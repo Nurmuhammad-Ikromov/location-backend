@@ -229,31 +229,31 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post("/locations", async (req, res) => {
-  try {
-    const payload = req.body;
-    const location = new Location(payload);
-    await location.save({ validateBeforeSave: false });
-    res.status(201).json(location);
-  } catch (error) {
-    res.status(400).json({
-      message: "Ma'lumotni saqlab bo'lmadi",
-      error: error.message,
-    });
-  }
-});
+// app.post("/locations", async (req, res) => {
+//   try {
+//     const payload = req.body;
+//     const location = new Location(payload);
+//     await location.save({ validateBeforeSave: false });
+//     res.status(201).json(location);
+//   } catch (error) {
+//     res.status(400).json({
+//       message: "Ma'lumotni saqlab bo'lmadi",
+//       error: error.message,
+//     });
+//   }
+// });
 
-app.get("/locations", async (_req, res) => {
-  try {
-    const locations = await Location.find().sort({ createdAt: -1 });
-    res.json(locations);
-  } catch (error) {
-    res.status(500).json({
-      message: "Ma'lumotlarni olib bo'lmadi",
-      error: error.message,
-    });
-  }
-});
+// app.get("/locations", async (_req, res) => {
+//   try {
+//     const locations = await Location.find().sort({ createdAt: -1 });
+//     res.json(locations);
+//   } catch (error) {
+//     res.status(500).json({
+//       message: "Ma'lumotlarni olib bo'lmadi",
+//       error: error.message,
+//     });
+//   }
+// });
 
 app.get("/health", (_req, res) => {
   res.status(200).json({ ok: true, uptime: process.uptime() });
