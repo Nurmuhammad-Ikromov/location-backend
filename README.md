@@ -10,6 +10,64 @@ Node.js + Express + MongoDB backend.
 
 ## Endpoints
 
+Frontend uchun auth integratsiya hujjati:
+
+- `docs/auth-frontend.md`
+
+### POST `/register`
+
+Request body:
+
+```json
+{
+  "firstName": "Ali",
+  "lastName": "Valiyev",
+  "email": "ali@example.com",
+  "password": "secret123"
+}
+```
+
+`firstName` o'rniga `ism`, `lastName` o'rniga `familya` yuborish ham mumkin.
+
+Response:
+
+```json
+{
+  "token": "jwt_token",
+  "user": {
+    "id": "mongo_user_id",
+    "firstName": "Ali",
+    "lastName": "Valiyev",
+    "email": "ali@example.com"
+  }
+}
+```
+
+### POST `/login`
+
+Request body:
+
+```json
+{
+  "email": "ali@example.com",
+  "password": "secret123"
+}
+```
+
+Response:
+
+```json
+{
+  "token": "jwt_token",
+  "user": {
+    "id": "mongo_user_id",
+    "firstName": "Ali",
+    "lastName": "Valiyev",
+    "email": "ali@example.com"
+  }
+}
+```
+
 ### POST `/locations`
 
 Request body:
